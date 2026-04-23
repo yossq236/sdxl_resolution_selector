@@ -6,7 +6,7 @@ class Resolution:
         self.width = width
         self.height = height
         gcd = math.gcd(self.width, self.height)
-        self.label = "{}x{}({}:{})".format(self.width, self.height, int(self.width // gcd), int(self.height // gcd))
+        self.label = f"{self.width}x{self.height}({int(self.width // gcd)}:{int(self.height // gcd)})"
 
 RESOLUTIONS = [
     Resolution(1024, 1024),
@@ -52,8 +52,8 @@ class SDXLResolutionSelectorNode(io.ComfyNode):
             outputs=[
                 io.Int.Output("width"),
                 io.Int.Output("height"),
-                io.Int.Output("target_width"),
-                io.Int.Output("target_height"),
+                io.Int.Output("scaled_width"),
+                io.Int.Output("scaled_height"),
                 ]
         )
 
@@ -69,7 +69,7 @@ class SDXLResolutionSelectorNode(io.ComfyNode):
         scaled_w = int((base_w * scale_by + 7) // 8 * 8)
         scaled_h = int((base_h * scale_by + 7) // 8 * 8)
         if orientation == "portrait":
-            return io.NodeOutput(scaled_w, scaled_h, base_w, base_h)
+            return io.NodeOutput(base_w, base_h, scaled_w, scaled_h)
         else:
-            return io.NodeOutput(scaled_h, scaled_w, base_h, base_w)
+            return io.NodeOutput(base_h, base_w, scaled_h, scaled_w)
 
